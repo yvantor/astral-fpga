@@ -7,6 +7,7 @@ INTERFACE       ?= ftdi
 DEVICE          ?= olimex-arm-usb-ocd-h
 ID              ?=
 TARGET          ?= smp
+PYTHON          ?= python
 
 # OpenOCD ports
 GDB_PORT    ?= 3334
@@ -97,7 +98,7 @@ OPENOCD_ARGS += $(OPENOCD_CMDS)
 
 $(HYPERRAM_CFG_FILE):
 	mkdir -p $(dir $@)
-	python3 $(SCRIPTS_DIR)/hyperram_cfg.py \
+	$(PYTHON) $(SCRIPTS_DIR)/hyperram_cfg.py \
 		--hyperram_size             $(HYPERRAM_SIZE) \
 		--hyperram_t_latency_access $(HYPERRAM_LATENCY_ACCESS) \
 		--hypperam_no_of_chips      $(HYPPERAM_NO_OF_CHIPS) \
@@ -183,3 +184,6 @@ deep-clean: clean
 
 .PHONY: init
 init: $(CVA6_SDK_DIR)
+
+init.%.gdb: %.h
+	$(PYTHON) $(SCRIPTS_DIR)/header2gdb.py $< $@
