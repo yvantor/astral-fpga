@@ -11,7 +11,8 @@ def extract_memory_writes(header_file):
             if match:
                 addr = match.group(1)
                 val = match.group(2)
-                gdb_commands.append(f"set {{unsigned int}}{addr} = {val}")
+                if val.lower() != '0x00000000':
+                  gdb_commands.append(f"set {{unsigned int}}{addr} = {val}")
 
     return gdb_commands
 
