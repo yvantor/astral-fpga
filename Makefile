@@ -1,6 +1,6 @@
 # Define default variables
 OPENOCD         ?= openocd
-OPENOCD_SCRIPTS ?= $(abspath $(dir $(shell which $(OPENOCD)))/../share/openocd/scripts)
+OPENOCD_SCRIPTS ?= $(abspath $(dir $(shell which $(OPENOCD)))/../tcl)
 GDB             ?= riscv64-unknown-elf-gdb
 ADAPTER_SPEED   ?= 1000
 INTERFACE       ?= ftdi
@@ -29,7 +29,7 @@ PAYLOAD       ?= $(IMAGES_DIR)/fw_payload.elf
 DTB_FILE      ?= astral_vanilla_vcu118.dtb
 DTB_ADDR      ?= 0x81800000
 
-MEM_BASE_ADDR ?= 0x80000000
+MEM_BASE_ADDR ?= 0x10000000
 
 # Hyperram config
 HYPERRAM_SIZE           ?= 0x2000000
@@ -45,7 +45,7 @@ OPENOCD_DEPS :=
 GDB_DEPS     := $(PAYLOAD)
 
 # Set NUM_HARTS and TARGET_FREQ
-NUM_HARTS     ?= 2
+NUM_HARTS     ?= 1
 TARGET_FREQ   ?= 50000000 # Hz
 
 export NUM_HARTS TARGET_FREQ
@@ -170,7 +170,7 @@ boot-linux:
 	-ex "load" \
 	-ex "thread 1" -ex "set \$$a0=0" -ex "set \$$a1=$(DTB_ADDR)" -ex "set \$$a2=0" \
 	-ex "set \$$pc=$(INITIAL_PC)"  -ex "info registers pc"\
-	
+
 
 .PHONY: clean deep-clean
 clean:
